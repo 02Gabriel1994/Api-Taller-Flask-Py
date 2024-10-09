@@ -1,0 +1,17 @@
+{% extends "./base.html" %} 
+{% block title %} Login {% endblock %}
+{% block customCSS %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+{% endblock %}
+
+
+{% block body %}
+<div style="width: 100%; display: block; justyfy-content: center;">
+<div style="width: 100%;">
+<h1>BUENAS, {{ current_user.fullname +" "+ current_user.username }} </h1> <!--Current user es una variable por defecto que trae las propiedades del usuario logueado y los trae de entidades, usuario-->
+</div>
+<div>
+<a class="btn btn-secondary" href = "{{ url_for('logout') }}">Salir chiques</a> <!--Esto llama la funcion logout-->
+</div>
+</div>
+{% endblock %}
