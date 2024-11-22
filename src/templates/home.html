@@ -1,3 +1,4 @@
+<div class="containerHome">
 {% extends "./base.html" %} 
 {% block title %} Login {% endblock %}
 {% block customCSS %}
@@ -6,12 +7,23 @@
 
 
 {% block body %}
-<div style="width: 100%; display: block; justyfy-content: center;">
-<div style="width: 100%;">
-<h1>BUENAS, {{ current_user.fullname +" "+ current_user.username }} </h1> <!--Current user es una variable por defecto que trae las propiedades del usuario logueado y los trae de entidades, usuario-->
+<div class="Logo">
+    <img class="mb-4" src="{{ url_for('static', filename = 'img/LogoMono.png') }}" alt="">
 </div>
-<div>
-<a class="btn btn-secondary" href = "{{ url_for('logout') }}">Salir chiques</a> <!--Esto llama la funcion logout-->
+<div class="menus">
+    <div class="Selecion">
+        <a href="/cliente">Crear cliente</a>
+        <a href="/vehiculo">Crear vehiculo</a>
+        <a href="/servicios">Servicios</a>
+        <a href="#">Modificaciones</a>
+        <a href="#">salir</a>
+    </div>
+    
+    <div class="formularios">
+        <h1>BUENAS, {{ current_user.fullname +" "+ current_user.username }} </h1> <!--Current user es una variable por defecto que trae las propiedades del usuario logueado y los trae de entidades, usuario-->
+    </div>
+    
 </div>
-</div>
+
 {% endblock %}
+</div>

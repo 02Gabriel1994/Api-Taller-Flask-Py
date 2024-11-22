@@ -1,14 +1,18 @@
 {% extends "./base.html" %} 
-{% block title %} Login {% endblock %}
+{% block title %} Monocars {% endblock %}
 {% block customCSS %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
 {% endblock %}
 
 
 {% block body %}
-
+<div class="container">
+  <div class="imagn">
+    <img class="mb-4" src="{{ url_for('static', filename = 'img/LogoMono.png') }}" alt="">
+  </div>
+  <div class="Form-Login">
+    <div class="Form-Login2">
   <form class="form-signin w-100 m-auto" action="/login" method = "POST">
-    <img class="mb-4" src="{{ url_for('static', filename = 'img/Move Orion.png') }}" alt="" width="72" height="57">
     {% with messages = get_flashed_messages() %}
       {% if messages %}
   <br>
@@ -20,25 +24,27 @@
       {% endfor %}
       {% endif %}
     {% endwith %}
-    <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+    
+      
+      
+    <h1 class="h3 mb-3 fw-normal">Login</h1>
        <input type = "hidden" name ="csrf_token" value ="{{ csrf_token() }}">
     <div class="form-floating">
+  
       <input type="text" class="form-control" id="floatingInput" name="usuario" placeholder="name@example.com">
-      <label for="floatingInput">Usuario</label>
+      <label for="floatingInput"><i class="fa-solid fa-user"></i>Usuario</label>
     </div>
     <div class="form-floating">
+      
       <input type="password" class="form-control" id="floatingPassword" name="password" placeholder="Password">
-      <label for="floatingPassword">Password</label>
+      <label for="floatingPassword"><i class="fa-solid fa-lock"></i>Contraseña</label>
     </div>
 
-    <div class="form-check text-start my-3">
-      <input class="form-check-input" type="checkbox" value="remember-me" id="flexCheckDefault">
-      <label class="form-check-label" for="flexCheckDefault">
-        Remember me
-      </label>
-    </div>
-    <button class="btn btn-primary w-100 py-2" type="submit">Sign in</button>
+    
+    <button class="btn btn-primary w-100 py-2" type="submit">iniciar sesión</button>
   
   </form>
-
+</div>
+</div>
+</div>
 {% endblock %}

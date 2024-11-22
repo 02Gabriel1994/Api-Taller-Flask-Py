@@ -1,0 +1,74 @@
+<div class="containerHome">
+    {% extends "./base.html" %} 
+    {% block title %} Servicios {% endblock %}
+    {% block customCSS %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+    {% endblock %}
+    
+    
+    {% block body %}
+    <div class="Logo">
+        <img class="mb-4" src="{{ url_for('static', filename = 'img/LogoMono.png') }}" alt="">
+    </div>
+    <div class="menus">
+        <div class="Selecion">
+            <a href="/cliente">Crear cliente</a>
+            <a href="">Crear vehiculo</a>
+            <a href="/servicios">Servicios</a>
+            <a href="#">Modificaciones</a>
+            <a href="#">salir</a>
+        </div>
+        
+        <div class="formularios">
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <br>
+                {% for message in messages %}
+                    {% if "Grabado con Exito" in messages %}
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {% else %}
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {% endif %}
+                            <strong>{{ message }}</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+            <form class="" action="/vehiculo" method = "POST">
+                <input type = "hidden" name ="csrf_token" value ="{{ csrf_token() }}">
+                <div class="form-block">
+                    <label for="Fecha_Ingreso"><b>Fecha de ingreso</b></label>
+                    <input type="date" name="Fecha_Ingreso" class="form-control">
+                    <label for="Fecha_Salida"><b>Fecha de Salida</b></label>
+                    <input type="date" name="Fecha_Salida" class="form-control">
+                </div>
+                <div class="form-block">
+                    <label for="Placa"><b>Placa</b></label>
+                    <input type="text" name="placa" class="form-control" maxlength="6" minlength="6">
+                </div>
+                <div class="form-block">
+                    <label for="Estado_Entrada"><b>Estado en que entra el vehiculo</b></label>
+                    <textarea name="Estado_Entrada" id="mensaje"></textarea>
+                </div>
+                <div class="form-block">
+                    <label for="Trabajo_Realizado"><b>Trabajo a realizar</b></label>
+                    <textarea name="Trabajo_Realizado" id="mensaje"></textarea>
+                </div>
+                <div class="centrar-horizontal">
+                    <label><b>DÍAS RESTANTES DE GARANTIA</b></label>
+                    <div>
+                        <button type="submit" class="btn btn-success">Grabar</button>
+                        <button type="submit" class="btn btn-success">Modificar</button>
+                        <button type="submit" class="btn btn-success">Buscar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+    </div>
+    
+    {% endblock %}
+    
+    </div>

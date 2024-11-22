@@ -1,0 +1,78 @@
+<div class="containerHome">
+    {% extends "./base.html" %} 
+    {% block title %} Login {% endblock %}
+    {% block customCSS %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+    {% endblock %}
+    
+    
+    {% block body %}
+    <div class="Logo">
+        <img class="mb-4" src="{{ url_for('static', filename = 'img/LogoMono.png') }}" alt="">
+    </div>
+    <div class="menus">
+        <div class="Selecion">
+            <a href="#">Crear cliente</a>
+            <a href="/vehiculo">Crear vehiculo</a>
+            <a href="/servicios">Servicios</a>
+            <a href="#">Modificaciones</a>
+            <a href="#">salir</a>
+        </div>
+        
+        <div class="formularios">
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <br>
+                {% for message in messages %}
+                    {% if "Grabado con Exito" in messages %}
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {% else %}
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {% endif %}
+                            <strong>{{ message }}</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+            <form class="" action="/cliente" method = "POST">
+                <input type = "hidden" name ="csrf_token" value ="{{ csrf_token() }}">
+                <div class="Centrar">
+                    <input class="form-control" type="text" name="nombre" placeholder="Nombres" aria-label="default input example" required>
+                    <select class="form-select" name="tipo_identificacion" aria-label="Default select example" required>
+                        <option selected>Tipo de Identificación</option>
+                        <option value="1">Tarjeta de Identidad</option>
+                        <option value="2">Cedula de ciudadania</option>
+                        <option value="3">Cedula de extranjeria</option>
+                        <option value="4">Pasaporte</option>
+                      </select>
+                </div>
+                <div class="Centrar">
+                    <input class="form-control" type="text" name="Apellidos" placeholder="Apellidos" aria-label="default input example" required>
+                    <input type="date" name="Fecha" class="form-control">
+                </div>
+                <div class="Centrar">
+                    <input class="form-control" type="number" name= "Documento" placeholder="Documento" aria-label="default input example" required>
+                    <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Correo" required>
+                </div>
+                <div class="Centrar">
+                    <input class="form-control" name="Telefono" type="number" placeholder="Telefono" aria-label="default input example" required>
+                    <input class="form-control"  name="Direccion" type="text" placeholder="Direccion" aria-label="default input example" required>
+                </div>
+                <div class="Ciudad">
+                    <input class="form-control"  name="Ciudad" type="text" placeholder="Ciudad" aria-label="default input example" required>
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-success">Grabar</button>
+                </div>
+            </form>
+        </div>
+        
+    </div>
+    
+    {% endblock %}
+    
+    </div>
+  
+    
