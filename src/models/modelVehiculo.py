@@ -24,7 +24,19 @@ class ModelVehiculo():
             return True
         except Exception as ex:
             error_message = str(ex)
-            # if "Duplicate entry" in error_message:  # Verificamos si el error es un "Duplicate entry"
-            #     return 1062
-            # else:
+            return error_message  # Para cualquier otro error
+    @classmethod
+    def Buscar_Vehiculo(self,db,datos):
+        try:
+            cursor=db.connection.cursor()
+            sql = """Select * from vehiculos where placa = %s;"""
+            cursor.execute(sql,(datos,))
+            row =cursor.fetchone()
+           
+            if not row == None:
+                return True
+            else:
+                return None
+        except Exception as ex:
+            error_message = str(ex)
             return error_message  # Para cualquier otro error

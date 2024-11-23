@@ -1,7 +1,7 @@
 
-class ModelVehiculo():
+class ModelServicios():
     @classmethod
-    def buscarCliente(self,db,datos):
+    def Buscar_Servicio(self,db,datos):
         try:
             cursor=db.connection.cursor()
             sql = """Select * from clientes where documento = %s;"""
@@ -14,12 +14,12 @@ class ModelVehiculo():
         except Exception as ex:
             raise Exception(ex)
     @classmethod
-    def Registrar_Vehiculo(self,db,datos):
+    def Registrar_Servicio(self,db,datos):
         try:
             cursor=db.connection.cursor()
-            sql = """INSERT INTO vehiculos (cedula_cliente, marca, tipo_vehiculo, Modelo_anio, placa, color, estado, year)
-                    VALUES (%s, %s, %s,%s, %s, %s, %s, %s);"""
-            cursor.execute(sql,(datos.cedula, datos.marca ,datos.Tipo, datos.Modelo , datos.placa, datos.color,  datos.estado ,datos.year))
+            sql = """INSERT INTO Servicios (fecha_ingreso, fecha_salida, placa, estado_entrada, trabajo_a_realizar)
+                    VALUES (%s, %s, %s,%s, %s);"""
+            cursor.execute(sql,(datos.fecha_ingreso, datos.fecha_salida ,datos.placa, datos.estado_entrada , datos.trabajo_a_realizar))
             db.connection.commit()
             return True
         except Exception as ex:
@@ -28,3 +28,4 @@ class ModelVehiculo():
             #     return 1062
             # else:
             return error_message  # Para cualquier otro error
+   

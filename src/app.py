@@ -9,6 +9,8 @@ from models.entities.Clientes import clientes
 from models.modelClientes import ModelCliente
 from models.entities.vehiculo import EntitiVehiculo
 from models.modelVehiculo import ModelVehiculo
+from models.entities.Servicios import EntitiServicios
+from models.modelServicios import ModelServicios
 from flask_wtf.csrf import CSRFProtect
 
 app = Flask(__name__) # crea la instancia de flask
@@ -116,19 +118,22 @@ def servicios():
     if request.method == 'POST':
         Fecha_Ingreso = request.form['Fecha_Ingreso']
         Fecha_Salida = request.form['Fecha_Salida']
+        if Fecha_Salida == "" :
+            Fecha_Salida = "20010101"
+
         placa= request.form['placa']
         Estado_Entrada= request.form['Estado_Entrada']
         Trabajo_Realizado = request.form['Trabajo_Realizado']
-        Datos = EntitiVehiculo(cedula, marca, tipo_vehiculo, modelo,año, placa, color, mensaje)
+        Datos = EntitiServicios(Fecha_Ingreso, Fecha_Salida, placa, Estado_Entrada,Trabajo_Realizado)
         #dato=ModelCliente.Registrar(db,Datos )
-        if ModelCliente.buscarCliente(db, Datos.cedula) ==  True:
-            respuesta = ModelVehiculo.Registrar_Vehiculo(db,Datos)
+        if ModelVehiculo.Buscar_Vehiculo(db, Datos.placa) ==  True:
+            respuesta = ModelServicios.Registrar_Servicio(db,Datos)
             if respuesta == True:
                 flash("Grabado con Exito")
             else:
                 flash(f"Error al guardar{respuesta}")
         else:
-            flash(f"Cliente no existe, debe registrarlo primero.")
+            flash(f"vehiculo no existe, debe registrarlo primero.")
     return render_template('servicios.html')
 @app.route('/protegido') #asi se protege de accesos sin logueo
 @login_required # esto indica que requiere que este logueado para acceder
