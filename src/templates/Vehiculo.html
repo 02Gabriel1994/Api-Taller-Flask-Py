@@ -24,7 +24,7 @@
             {% if messages %}
                 <br>
                 {% for message in messages %}
-                    {% if "Grabado con Exito" in messages %}
+                    {% if "Grabado con Exito" in messages or "Modificado con Exito" in messages %}
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
                     {% else %}
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -38,45 +38,71 @@
         {% endwith %}
             <form class="" action="/vehiculo" method = "POST">
                 <input type = "hidden" name ="csrf_token" value ="{{ csrf_token() }}">
+                <input type="hidden" name="action" id="action" value=""> 
                 <div class="Centrar">
-                    <input class="form-control" type="number" name= "cedula" placeholder="Cedula Cliente" aria-label="default input example" required>
+                    <div class="form-block">
+                        <label for="placa"><b>Placa</b></label>
+                        <input class="form-control" type="text" name= "placa" placeholder="Placa" aria-label="default input example" maxlength="6" minlength="6" value="{% if not datos ==null %}{{ datos[5] }}{% endif %}">
+                    </div>
+                    <div class="form-block">
+                        <label for="cedula"><b>Cedula</b></label>
+                        <input class="form-control" type="number" name= "cedula" placeholder="Cedula Cliente" aria-label="default input example" value="{% if not datos ==null %}{{ datos[1] }}{% endif %}">
+                    </div>
+                    
                 </div>
                 <div class="Centrar">
-                    <input class="form-control" type="text" name="marca" placeholder="Marca" aria-label="default input example" required>
-                    <select class="form-select" name="tipo_vehiculo" aria-label="Default select example" required>
-                        <option selected>Tipo de Vehiculo</option>
-                        <option value="1">Sedán</option>
-                        <option value="2">Hatchback</option>
-                        <option value="3">SUV</option>
-                        <option value="4">Pickup</option>
-                        <option value="5">Convertible</option>
-                        <option value="6">Coupé</option>
-                        <option value="7">Minivan</option>
-                        <option value="8">Van</option>
-                        <option value="9">Motocicleta</option>
-                        <option value="10">Camion</option>
-                        <option value="11">Autobús</option>
-                        <option value="12">Tractor</option>
-                        <option value="13">Trailler</option>
-                      </select>
+                    <div class="form-block">
+                        <label for="marca"><b>Marca</b></label>
+                        <input class="form-control" type="text" name="marca" placeholder="Marca" aria-label="default input example" value="{% if not datos ==null %}{{ datos[2] }}{% endif %}">
+                    </div>
+                    <div class="form-block">
+                        <label for="tipo_vehiculo"><b>Tipo de Vehiculo</b></label>
+                        <select class="form-select" name="tipo_vehiculo" aria-label="Default select example">
+                            <option value="" {% if datos and datos[3] == "" %}selected{% endif %}>Tipo de Vehículo</option>
+                            <option value="1" {% if datos and datos[3] == "Sedán" %}selected{% endif %}>Sedán</option>
+                            <option value="2" {% if datos and datos[3] == "Hatchback" %}selected{% endif %}>Hatchback</option>
+                            <option value="3" {% if datos and datos[3] == "SUV" %}selected{% endif %}>SUV</option>
+                            <option value="4" {% if datos and datos[3] == "Pickup" %}selected{% endif %}>Pickup</option>
+                            <option value="5" {% if datos and datos[3] == "Convertible" %}selected{% endif %}>Convertible</option>
+                            <option value="6" {% if datos and datos[3] == "Coupé" %}selected{% endif %}>Coupé</option>
+                            <option value="7" {% if datos and datos[3] == "Minivan" %}selected{% endif %}>Minivan</option>
+                            <option value="8" {% if datos and datos[3] == "Van" %}selected{% endif %}>Van</option>
+                            <option value="9" {% if datos and datos[3] == "Motocicleta" %}selected{% endif %}>Motocicleta</option>
+                            <option value="10" {% if datos and datos[3] == "Camion" %}selected{% endif %}>Camion</option>
+                            <option value="11" {% if datos and datos[3] == "Autobús" %}selected{% endif %}>Autobús</option>
+                            <option value="12" {% if datos and datos[3] == "Tractor" %}selected{% endif %}>Tractor</option>
+                            <option value="13" {% if datos and datos[3] == "Trailler" %}selected{% endif %}>Trailler</option>
+                        </select>
+                        
+                    </div>
                 </div>
                 <div class="Centrar">
-                    <input class="form-control" type="text" name="modelo" placeholder="Modelo" aria-label="default input example" required>
-                    <input class="form-control" type="number" name= "año" placeholder="Año" aria-label="default input example" required>
+                    <div class="form-block">
+                    <label for="modelo"><b>Modelo</b></label>
+                    <input class="form-control" type="number" name="modelo" placeholder="Modelo" aria-label="default input example" maxlength="4" minlength="4" value="{% if not datos ==null %}{{ datos[4] }}{% endif %}">
+                </div>
+                    <div class="form-block">
+                    <label for="año"><b>Año</b></label>
+                    <input class="form-control" type="number" name= "año" placeholder="Año" aria-label="default input example" maxlength="4" minlength="4" value="{% if not datos ==null %}{{ datos[8] }}{% endif %}">
+                </div>
                 </div>
                 <div class="Centrar">
-                    <input class="form-control" type="text" name= "placa" placeholder="Placa" aria-label="default input example" required>
-                    <input class="form-control" type="text" name="color" placeholder="Color" aria-label="default input example" required>
+                    <div class="form-block">
+                    <label for="color"><b>Color</b></label>
+                    <input class="form-control" type="text" name="color" placeholder="Color" aria-label="default input example" value="{% if not datos ==null %}{{ datos[6] }}{% endif %}">
+                    </div>
                 </div>
                 
                 <div>
-                    <button type="submit" class="btn btn-success">Grabar</button>
+                    <button type="submit" onclick="setAction('registrar')" class="btn btn-success">Grabar</button>
+                    <button type="submit" onclick="setAction('modificar')" class="btn btn-success">Modificar</button>
+                    <button type="submit" onclick="setAction('buscar')" class="btn btn-success">Buscar</button>
                 </div>
             </form>
         </div>
         
     </div>
-    
+    <script src="{{ url_for('static', filename='js/Funtions.js') }}"></script>
     {% endblock %}
     
     </div>

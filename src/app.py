@@ -1,5 +1,5 @@
 #https://youtu.be/FX0lMm_Qj10
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from config import config
 from flask_mysqldb import MySQL
 from flask_login import LoginManager, login_user, logout_user, login_required # esto es para manejo de seciones
@@ -11,6 +11,7 @@ from models.entities.vehiculo import EntitiVehiculo
 from models.modelVehiculo import ModelVehiculo
 from models.entities.Servicios import EntitiServicios
 from models.modelServicios import ModelServicios
+import utilidades.Funciones as F
 from flask_wtf.csrf import CSRFProtect
 
 app = Flask(__name__) # crea la instancia de flask
@@ -58,6 +59,7 @@ def cliente():
         "3": "Cedula de extranjeria",
         "4": "Pasaporte"
     }
+        action = request.form.get('action') 
         Nombre = request.form['nombre']
         tipoDeIdentificacion = options.get(request.form['tipo_identificacion'], 0) 
         Apellidos = request.form['Apellidos']
@@ -68,13 +70,35 @@ def cliente():
         direcicion = request.form['Direccion']
         ciudad = request.form['Ciudad']
         Datos =clientes(Nombre, tipoDeIdentificacion, Apellidos, fecha, Documento, email, telefono, direcicion, ciudad)
-        registrarCliente=ModelCliente.Registrar(db,Datos )
-        if registrarCliente ==  1062:
-            flash("Cliente Ya existe")
-        elif registrarCliente == True:
-            flash("Grabado con Exito")
-        else:
-            flash(f"Error al guardar{registrarCliente}")
+        if action == 'registrar':
+            datos_completos= F.validar_datos(Datos)
+            if not datos_completos == False:
+                registrarCliente=ModelCliente.Registrar(db,Datos)
+                if registrarCliente ==  1062:
+                    flash("Cliente Ya existe")
+                elif registrarCliente == True:
+                    flash("Grabado con Exito")
+                else:
+                    flash(f"Error al guardar{registrarCliente}")
+            else:
+                flash(f"Faltaron Datos por llenar")
+        elif action == 'modificar':
+            datos_completos= F.validar_datos(Datos)
+            if not datos_completos == False:
+                respuesta = ModelCliente.buscarCliente(db,Datos.Documento)
+                if not respuesta == None:
+                    respuesta= ModelCliente.Modificar(db,Datos)
+                    if respuesta == True:
+                        flash(f"Modificado con Exito")
+                    else:
+                        flash(f"Error al guardar: {respuesta}")
+                else:
+                    flash(f"El cliente no existe")
+            else:
+                flash(f"Faltaron Datos por llenar")
+        elif action == 'buscar':
+                respuesta= ModelCliente.buscarCliente(db,Datos.Documento)
+                return render_template('cliente.html', datos=respuesta )
     return render_template('cliente.html')
 @app.route('/vehiculo', methods=['GET', 'POST'])
 def vehiculo():
@@ -94,6 +118,7 @@ def vehiculo():
         "12": "Tractor",
         "13": "Trailler",
     }
+        action = request.form.get('action') 
         cedula = request.form['cedula']
         tipo_vehiculo = options.get(request.form['tipo_vehiculo'], 0) 
         marca = request.form['marca']
@@ -101,21 +126,52 @@ def vehiculo():
         año= request.form['año']
         placa = request.form['placa']
         color =request.form['color']
-        mensaje = request.form['mensaje']
-        Datos = EntitiVehiculo(cedula, marca, tipo_vehiculo, modelo,año, placa, color, mensaje)
+        Datos = EntitiVehiculo(cedula, marca, tipo_vehiculo, modelo,año, placa, color)
         #dato=ModelCliente.Registrar(db,Datos )
-        if ModelCliente.buscarCliente(db, Datos.cedula) ==  True:
-            respuesta = ModelVehiculo.Registrar_Vehiculo(db,Datos)
-            if respuesta == True:
-                flash("Grabado con Exito")
-            else:
-                flash(f"Error al guardar{respuesta}")
+        if not ModelCliente.buscarCliente(db, Datos.cedula) ==  None:
+            if action == 'registrar':
+                existe_vehiculo=ModelVehiculo.Buscar_Vehiculo(db,Datos.placa)
+                if existe_vehiculo== None:
+                    datos_completos= F.validar_datos(Datos)
+                    if not datos_completos == False:
+                        respuesta = ModelVehiculo.Registrar_Vehiculo(db,Datos)
+                        if respuesta == True:
+                            flash("Grabado con Exito")
+                        else:
+                            flash(f"Error al guardar: {respuesta}")
+                    else:
+                        flash(f"Faltaron Datos por llenar")
+                else:
+                    flash(f"Vehiculo ya existe")
+            elif action == 'modificar':
+                existe_vehiculo=ModelVehiculo.Buscar_Vehiculo(db,Datos.placa)
+                if existe_vehiculo== None:
+                    datos_completos= F.validar_datos(Datos)
+                    if not datos_completos == False:
+                        respuesta = ModelVehiculo.buscarCliente(db,Datos)
+                        if respuesta == True:
+                            respuesta = ModelVehiculo.Modificar_Vehiculo(db,Datos)
+                            if respuesta == True:
+                                flash(f"Modificado con Exito")
+                            else:
+                                flash(f"Error al guardar: {respuesta}")
+                        else:
+                            flash(f"Cliente no existe")
+                    else:
+                        flash(f"Faltaron Datos por llenar")
+                else:
+                    flash(f"Vehiculo ya existe")
+        elif action == 'buscar':
+            respuesta= ModelVehiculo.Buscar_Vehiculo(db,Datos.placa)
+            print(respuesta)
+            return render_template('Vehiculo.html', datos=respuesta )
         else:
             flash(f"Cliente no existe, debe registrarlo primero.")
     return render_template('Vehiculo.html')
 @app.route('/servicios', methods=['GET', 'POST'])
 def servicios():
     if request.method == 'POST':
+        action = request.form.get('action')  # Obtener la acción
         Fecha_Ingreso = request.form['Fecha_Ingreso']
         Fecha_Salida = request.form['Fecha_Salida']
         if Fecha_Salida == "" :
@@ -126,12 +182,25 @@ def servicios():
         Trabajo_Realizado = request.form['Trabajo_Realizado']
         Datos = EntitiServicios(Fecha_Ingreso, Fecha_Salida, placa, Estado_Entrada,Trabajo_Realizado)
         #dato=ModelCliente.Registrar(db,Datos )
-        if ModelVehiculo.Buscar_Vehiculo(db, Datos.placa) ==  True:
-            respuesta = ModelServicios.Registrar_Servicio(db,Datos)
-            if respuesta == True:
-                flash("Grabado con Exito")
-            else:
-                flash(f"Error al guardar{respuesta}")
+        if not ModelVehiculo.Buscar_Vehiculo(db, Datos.placa) ==  None:
+            if action == 'registrar':
+                respuesta = ModelServicios.Registrar_Servicio(db,Datos)
+                if respuesta == True:
+                    flash("Grabado con Exito")
+                else:
+                    flash(f"Error al guardar{respuesta}")
+            elif action == 'modificar':
+                respuesta= ModelServicios.Modificar_Servicio(db,Datos)
+                if respuesta == True:
+                    flash("Modificado con Exito")
+                elif respuesta == None :
+                    flash("La placa no se encuentra Registrada")
+                else:
+                    flash(f"Error al guardar{respuesta}")
+            elif action == 'buscar':
+                respuesta= ModelServicios.Buscar_Servicio_Para_Id(db,Datos.placa)
+                garantia = F.dias_de_garantia(respuesta[2])
+                return render_template('servicios.html', datos=respuesta, garantia= garantia )
         else:
             flash(f"vehiculo no existe, debe registrarlo primero.")
     return render_template('servicios.html')

@@ -24,7 +24,7 @@
             {% if messages %}
                 <br>
                 {% for message in messages %}
-                    {% if "Grabado con Exito" in messages %}
+                {% if "Grabado con Exito" in messages or "Modificado con Exito" in messages %}
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
                     {% else %}
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -38,39 +38,70 @@
         {% endwith %}
             <form class="" action="/cliente" method = "POST">
                 <input type = "hidden" name ="csrf_token" value ="{{ csrf_token() }}">
+                <input type="hidden" name="action" id="action" value=""> 
                 <div class="Centrar">
-                    <input class="form-control" type="text" name="nombre" placeholder="Nombres" aria-label="default input example" required>
-                    <select class="form-select" name="tipo_identificacion" aria-label="Default select example" required>
-                        <option selected>Tipo de Identificación</option>
-                        <option value="1">Tarjeta de Identidad</option>
-                        <option value="2">Cedula de ciudadania</option>
-                        <option value="3">Cedula de extranjeria</option>
-                        <option value="4">Pasaporte</option>
-                      </select>
+                    <div class="form-block">
+                    <label for="nombre"><b>Nombre</b></label>
+                    <input class="form-control" type="text" name="nombre" placeholder="Nombres" aria-label="default input example"  value="{% if not datos ==null %}{{ datos[1] }}{% endif %}">
+                    </div>
+                    <div class="form-block">
+                    <label for="tipo_identificacion"><b>Tipo de Documento de Identidad</b></label>
+                    <select class="form-select" name="tipo_identificacion" aria-label="Default select example">
+                        <option value="" {% if datos and datos[2] == "" %}selected{% endif %}>Tipo de Identificación</option>
+                        <option value="1" {% if datos and datos[2] == "Tarjeta de Identidad" %}selected{% endif %}>Tarjeta de Identidad</option>
+                        <option value="2" {% if datos and datos[2] == "Cedula de ciudadania" %}selected{% endif %}>Cedula de ciudadania</option>
+                        <option value="3" {% if datos and datos[2] == "Cedula de extranjeria" %}selected{% endif %}>Cedula de extranjeria</option>
+                        <option value="4" {% if datos and datos[2] == "Pasaporte" %}selected{% endif %}>Pasaporte</option>
+                    </select>
+                </div>
                 </div>
                 <div class="Centrar">
-                    <input class="form-control" type="text" name="Apellidos" placeholder="Apellidos" aria-label="default input example" required>
-                    <input type="date" name="Fecha" class="form-control">
+                    <div class="form-block">
+                    <label for="Apellidos"><b>Apellidos</b></label>
+                    <input class="form-control" type="text" name="Apellidos" placeholder="Apellidos" aria-label="default input example" value="{% if not datos ==null %}{{ datos[3] }}{% endif %}">
+                    </div>
+                    <div class="form-block">
+                    <label for="Fecha"><b>Fecha de ingreso</b></label>
+                    <input type="date" name="Fecha" class="form-control" value="{% if not datos ==null %}{{ datos[4] }}{% endif %}">
+                    </div>
+                </div>
+                    <div class="Centrar">
+                    <div class="form-block">
+                    <label for="Documento"><b>Numero de Documento</b></label>
+                    <input class="form-control" type="number" name= "Documento" placeholder="Documento" aria-label="default input example" value="{% if not datos ==null %}{{ datos[5] }}{% endif %}">
+                    </div>
+                    <div class="form-block">
+                    <label for="email"><b>Correo Electronico</b></label>
+                    <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Correo" value="{% if not datos ==null %}{{ datos[6] }}{% endif %}">
+                    </div>
                 </div>
                 <div class="Centrar">
-                    <input class="form-control" type="number" name= "Documento" placeholder="Documento" aria-label="default input example" required>
-                    <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Correo" required>
+                    <div class="form-block">
+                    <label for="Telefono"><b>Telefono de contacto</b></label>
+                    <input class="form-control" name="Telefono" type="number" placeholder="Telefono" aria-label="default input example" value="{% if not datos ==null %}{{ datos[7] }}{% endif %}">
+                    </div>
+                    <div class="form-block">
+                    <label for="Ciudad"><b>Ciudad</b></label>
+                    <input class="form-control"  name="Ciudad" type="text" placeholder="Ciudad" aria-label="default input example" value="{% if not datos ==null %}{{ datos[9] }}{% endif %}">
+                    
+                    </div>
                 </div>
                 <div class="Centrar">
-                    <input class="form-control" name="Telefono" type="number" placeholder="Telefono" aria-label="default input example" required>
-                    <input class="form-control"  name="Direccion" type="text" placeholder="Direccion" aria-label="default input example" required>
+                <div class="form-block">
+                    <label for="Direccion"><b>Direccion</b></label>
+                    <input class="form-control"  name="Direccion" type="text" placeholder="Direccion" aria-label="default input example" value="{% if not datos ==null %}{{ datos[8] }}{% endif %}">
                 </div>
-                <div class="Ciudad">
-                    <input class="form-control"  name="Ciudad" type="text" placeholder="Ciudad" aria-label="default input example" required>
                 </div>
                 <div>
-                    <button type="submit" class="btn btn-success">Grabar</button>
+                    <button type="submit" onclick="setAction('registrar')" class="btn btn-success">Grabar</button>
+                    <button type="submit" onclick="setAction('modificar')" class="btn btn-success">Modificar</button>
+                    <button type="submit" onclick="setAction('buscar')" class="btn btn-success">Buscar</button>
                 </div>
             </form>
         </div>
         
     </div>
-    
+    <script src="{{ url_for('static', filename='js/Funtions.js') }}"></script>
     {% endblock %}
     
     </div>
