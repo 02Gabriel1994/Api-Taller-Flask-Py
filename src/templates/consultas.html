@@ -13,10 +13,10 @@
     <div class="menus">
         <div class="Selecion">
             <a href="/cliente">Crear cliente</a>
-            <a href="">Crear vehiculo</a>
+            <a href="/vehiculo">Crear vehiculo</a>
             <a href="/servicios">Servicios</a>
-            <a href="#">Modificaciones</a>
-            <a href="#">salir</a>
+            <a href="#">Consultas</a>
+            <a href="/logout">salir</a>
         </div>
         
         <div class="formularios">
@@ -78,6 +78,41 @@
                         <td>{% if not datos ==null %}{{ datos[6] }}{% endif %}</td>
                         <td>{% if not datos ==null %}{{ datos[4] }}{% endif %}</td>
                     </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="tabla-contenedor">
+            <table class="table table-bordered">
+                <label><b>Datos del Vehiculo</b></label>
+                <thead>
+                    <tr>
+                        <th>Marca</th>
+                        <th>Modelo</th>
+                        <th>Año</th>
+                        <th>Placa</th>
+                        <th>Color</th>
+                        <th>Tipo Vehiculo</th>
+                        <th>Estado Ingreso</th>
+                        <th>Trabajo Realizado</th>
+                        <th>Fecha Ingreso</th>
+                        <th>Fecha Salida</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for x in vehiculos %}
+                    <tr>
+                        <td>{% if not x ==null %}{{ x[0] }}{% endif %}</td>
+                        <td>{% if not x ==null %}{{ x[1] }}{% endif %}</td>
+                        <td>{% if not x ==null %}{{ x[2] }}{% endif %}</td>
+                        <td>{% if not x ==null %}{{ x[3] }}{% endif %}</td>
+                        <td>{% if not x ==null %}{{ x[4] }}{% endif %}</td>
+                        <td>{% if not x ==null %}{{ x[5] }}{% endif %}</td>
+                        <td>{% if not x ==null %}{{ x[6] }}{% endif %}</td>
+                        <td>{% if not x ==null %}{{ x[7] }}{% endif %}</td>
+                        <td>{% if not x ==null %}{{ x[8] }}{% endif %}</td>
+                        <td>{% if not x ==null %}{{ x[9] }}{% endif %}</td>
+                    </tr>
+                {% endfor %}
                 </tbody>
             </table>
         </div>

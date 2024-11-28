@@ -51,6 +51,7 @@ def logout():
 def home():
     return render_template('home.html')
 @app.route('/cliente', methods=['GET', 'POST'])
+@login_required
 def cliente():
     if request.method == 'POST':
         options = {
@@ -101,6 +102,7 @@ def cliente():
                 return render_template('cliente.html', datos=respuesta )
     return render_template('cliente.html')
 @app.route('/vehiculo', methods=['GET', 'POST'])
+@login_required
 def vehiculo():
     if request.method == 'POST':
         options = {
@@ -169,6 +171,7 @@ def vehiculo():
             flash(f"Cliente no existe, debe registrarlo primero.")
     return render_template('Vehiculo.html')
 @app.route('/servicios', methods=['GET', 'POST'])
+@login_required
 def servicios():
     if request.method == 'POST':
         action = request.form.get('action')  # Obtener la acción
@@ -205,12 +208,13 @@ def servicios():
             flash(f"vehiculo no existe, debe registrarlo primero.")
     return render_template('servicios.html')
 @app.route('/consultas', methods=['GET', 'POST'] )
+@login_required
 def Consultas():
     if request.method == 'POST': #Hay dos metodos el get que es cuando recien se entra, y el post, que es cuando se pide el login, aqui se hara la parte de cuando se esta pidiendo ese login
         cedula = request.form['Documento']
         respuesta = ModelCliente.buscarCliente(db,cedula)
-        print(respuesta)
-        return render_template('consultas.html', datos=respuesta )
+        vehiculos = ModelVehiculo.Buscar_Vehiculo_por_cedula(db,cedula )
+        return render_template('consultas.html', datos=respuesta, vehiculos= vehiculos )
     return render_template('consultas.html')
 @app.route('/protegido') #asi se protege de accesos sin logueo
 @login_required # esto indica que requiere que este logueado para acceder

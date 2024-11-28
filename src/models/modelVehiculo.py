@@ -62,3 +62,20 @@ class ModelVehiculo():
         except Exception as ex:
             error_message = str(ex)
             return error_message  # Para cualquier otro error
+    @classmethod
+    def Buscar_Vehiculo_por_cedula(self,db,cedula):
+        try:
+            cursor=db.connection.cursor()
+            sql = """Select t0.marca, t0.modelo_anio, t0.year, t0.placa, t0.color, t0.tipo_vehiculo, t2.estado_entrada, t2.trabajo_a_realizar,t2.fecha_ingreso, t2.fecha_salida from vehiculos T0
+                INNER JOIN CLIENTES T1 ON T0.CEDULA_CLIENTE = T1.DOCUMENTO
+                inner join servicios t2 On T0.placa = t2.placa
+                where T1.DOCUMENTO =  %s;"""
+            cursor.execute(sql,(cedula,))
+            row =cursor.fetchall()
+            if not row == None:
+                return row
+            else:
+                return None
+        except Exception as ex:
+            error_message = str(ex)
+            return error_message  # Para cualquier otro error
