@@ -1,0 +1,91 @@
+<div class="containerHome">
+    {% extends "./base.html" %} 
+    {% block title %} Consultas {% endblock %}
+    {% block customCSS %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+    {% endblock %}
+    
+    
+    {% block body %}
+    <div class="Logo">
+        <img class="mb-4" src="{{ url_for('static', filename = 'img/LogoMono.png') }}" alt="">
+    </div>
+    <div class="menus">
+        <div class="Selecion">
+            <a href="/cliente">Crear cliente</a>
+            <a href="">Crear vehiculo</a>
+            <a href="/servicios">Servicios</a>
+            <a href="#">Modificaciones</a>
+            <a href="#">salir</a>
+        </div>
+        
+        <div class="formularios">
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <br>
+                {% for message in messages %}
+                    {% if "Grabado con Exito" in messages or "Modificado con Exito" in messages %}
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {% else %}
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {% endif %}
+                            <strong>{{ message }}</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+            <form class="" action="/consultas" method = "POST">
+                <input type = "hidden" name ="csrf_token" value ="{{ csrf_token() }}"> 
+                <div class="centrar">
+                    <div class="form-block">
+                        <label for="Documento"><b>Consultar por Cedula</b></label>
+                        <input class="form-control" type="number" name= "Documento" placeholder="Documento" aria-label="default input example">
+                    </div>
+                </div>
+                    <div>
+                        <button type="submit" class="btn btn-success">Buscar</button>
+                    </div>
+                
+                
+            </form>
+            <div class="tabla-contenedor">
+            <table class="table table-bordered">
+                <label><b>Datos del cliente</b></label>
+                <thead>
+                    <tr>
+                        <th>Nombres</th>
+                        <th>Apellidos</th>
+                        <th>Tipo de Documento</th>
+                        <th>Documento</th>
+                        <th>Telefono</th>
+                        <th>Ciudad</th>
+                        <th>Direccion</th>
+                        <th>Correo</th>
+                        <th>Fecha de creacion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{% if not datos ==null %}{{ datos[1] }}{% endif %}</td>
+                        <td>{% if not datos ==null %}{{ datos[3] }}{% endif %}</td>
+                        <td>{% if not datos ==null %}{{ datos[2] }}{% endif %}</td>
+                        <td>{% if not datos ==null %}{{ datos[5] }}{% endif %}</td>
+                        <td>{% if not datos ==null %}{{ datos[7] }}{% endif %}</td>
+                        <td>{% if not datos ==null %}{{ datos[9] }}{% endif %}</td>
+                        <td>{% if not datos ==null %}{{ datos[8] }}{% endif %}</td>
+                        <td>{% if not datos ==null %}{{ datos[6] }}{% endif %}</td>
+                        <td>{% if not datos ==null %}{{ datos[4] }}{% endif %}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        </div>
+       
+    </div>
+    
+
+    {% endblock %}
+    
+</div>

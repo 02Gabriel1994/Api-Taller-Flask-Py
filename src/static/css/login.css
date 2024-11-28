@@ -167,3 +167,29 @@ textarea{
   background-color: white;
   padding: 20px 10px;
 }
+
+.tabla-contenedor {
+  width: 80%;
+  margin: 20px auto;
+  padding: 10px;
+  border: 2px solid #ccc;
+  background-color: #f9f9f9;
+  overflow-x: auto;  /* Habilita el desplazamiento horizontal */
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: auto;
+}
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+  word-wrap: break-word;
+}
+th {
+  background-color: #f4f4f4;
+}
+tr:nth-child(even) {
+  background-color: #f9f9f9;
+}

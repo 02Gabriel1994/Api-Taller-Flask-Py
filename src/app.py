@@ -204,6 +204,14 @@ def servicios():
         else:
             flash(f"vehiculo no existe, debe registrarlo primero.")
     return render_template('servicios.html')
+@app.route('/consultas', methods=['GET', 'POST'] )
+def Consultas():
+    if request.method == 'POST': #Hay dos metodos el get que es cuando recien se entra, y el post, que es cuando se pide el login, aqui se hara la parte de cuando se esta pidiendo ese login
+        cedula = request.form['Documento']
+        respuesta = ModelCliente.buscarCliente(db,cedula)
+        print(respuesta)
+        return render_template('consultas.html', datos=respuesta )
+    return render_template('consultas.html')
 @app.route('/protegido') #asi se protege de accesos sin logueo
 @login_required # esto indica que requiere que este logueado para acceder
 def protected():
